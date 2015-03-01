@@ -6,6 +6,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require('express-session');
 var flash = require('connect-flash');
+var multer = require('multer');
 
 var routes = require('./routes/index');
 var settings = require('./settings');
@@ -36,6 +37,12 @@ app.use(session({
   })
 }));
 app.use(flash());
+app.use(multer({
+  dest: './public/images',
+  rename: function(fieldname, filename) {
+    return filename;
+  }
+}));
 
 app.use('/', routes);
 

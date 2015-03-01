@@ -134,6 +134,22 @@ router.get('/logout', function(req, res) {
   res.redirect('/');
 });
 
+router.get('/upload', checkLogin);
+router.get('/upload', function(req, res) {
+  res.render('upload', {
+    title: 'Upload',
+    user: req.session.user,
+    success: req.flash('success').toString(),
+    error: req.flash('error').toString()
+  });
+});
+
+router.post('/upload', checkLogin);
+router.post('/upload', function (req, res) {
+  req.flash('success', 'File(s) uploaded!');
+  res.redirect('/upload');
+});
+
 module.exports = router;
 
 function checkLogin(req, res, next) {
