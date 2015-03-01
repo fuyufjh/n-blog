@@ -1,0 +1,10 @@
+<%- include header %>
+<% posts.forEach(function (post, index) { %>
+<p><h2><a href="/u/<%= post.name %>/<%= post.time.day %>/<%= post.title %>"><%= post.title %></a></h2></p>
+<p class="info">
+    Author: <a href="/u/<%= post.name %>"><%= post.name %></a> |
+    Date: <%= post.time.minute %>
+</p>
+<p><%- post.text %></p>
+<% }) %>
+<%- include footer %>

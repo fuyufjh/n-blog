@@ -6,7 +6,7 @@ var router = express.Router(),
     Post = require('../models/post');
 
 router.get('/', function(req, res) {
-  Post.get(null, function (err, posts) {
+  Post.getAll(null, function (err, posts) {
     if (err) {
       req.flash('error', err);
       posts = [];
