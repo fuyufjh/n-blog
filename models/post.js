@@ -78,6 +78,46 @@ Post.getAll = function(name, callback) {
   });
 };
 
+Post.getAllOnePage = function(name, page, callback) {
+  mongodb.open(function (err, db) {
+    if (err) {
+      return callback(err);
+    }
+    db.collection('posts', function(err, collection) {
+      if (err) {
+        mongodb.close();
+        return callback(err);
+      }
+      var query = {};
+      if (name) {
+        query.name = name;
+      }
+      collection.count(query, function (err, total) {
+        if (err) {
+          mongodb.close();
+          return callback(err);
+        }
+        collection.find(query, {
+          skip: (page - 1) * 10,
+          limit: 10
+        }).sort({
+          time: -1
+        }).toArray(function (err, docs) {
+          mongodb.close();
+          if (err) {
+            return callback(err);
+          }
+          // Processing with markdown (to HTML)
+          docs.forEach(function (post) {
+            post.text = markdown.toHTML(post.text);
+          });
+          callback(null, docs, total);
+        });
+      });
+    });
+  });
+};
+
 Post.getOne = function(name, day, title, callback) {
   mongodb.open(function (err, db) {
     if (err) {

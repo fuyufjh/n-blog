@@ -6,7 +6,10 @@ var router = express.Router(),
     Post = require('../models/post');
 
 router.get('/', function(req, res) {
-  Post.getAll(null, function (err, posts) {
+  // get page no.
+  var page = req.query.p?parseInt(req.query.p):1;
+
+  Post.getAllOnePage(null, page, function (err, posts, total) {
     if (err) {
       req.flash('error', err);
       posts = [];
@@ -16,7 +19,10 @@ router.get('/', function(req, res) {
       user: req.session.user,
       posts: posts,
       success: req.flash('success').toString(),
-      error: req.flash('error').toString()
+      error: req.flash('error').toString(),
+      prevPage: page > 1,
+      nextPage: (page-1)*10 + posts.length != total,
+      page: page
     });
   });
 });

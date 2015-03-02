@@ -5,12 +5,15 @@ var router = express.Router(),
     Comment = require('../models/comment');
 
 router.get('/:name', function(req, res) {
+  // get page no.
+  var page = req.query.p?parseInt(req.query.p):1;
+
   User.get(req.params.name, function(err, user) {
     if (!user) {
       req.flash('error', 'No such user!');
       return res.redirect('/');
     }
-    Post.getAll(user.name, function(err, posts) {
+    Post.getAllOnePage(user.name, page, function(err, posts, total) {
       if (err) {
         req.flash('error', err);
         posts = [];
@@ -20,7 +23,10 @@ router.get('/:name', function(req, res) {
         user: req.session.user,
         posts: posts,
         success: req.flash('success').toString(),
-        error: req.flash('error').toString()
+        error: req.flash('error').toString(),
+        prevPage: page > 1,
+        nextPage: (page-1)*10 + posts.length != total,
+        page: page
       });
     });
   });
@@ -48,13 +54,6 @@ router.post('/:name/:day/:title', function (req, res) {
       req.flash('error', err);
       return res.redirect('back');
     }
-    /*res.render('article', {
-      title: post.title,
-      post: post,
-      user: req.session.user,
-      success: req.flash('success').toString(),
-      error: req.flash('error').toString()
-    });*/
     var post_id = post._id;
     var comment = new Comment(post_id, req.body.name, req.body.email, req.body.website, req.body.content);
     comment.save(function(err) {
