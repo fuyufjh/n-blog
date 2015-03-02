@@ -6,5 +6,5 @@ var settings = require('../settings'),
     mongodb = require('mongodb');
 
 module.exports = new mongodb.Db(settings.db, new mongodb.Server(
-    settings.host, settings.port, {safe: true}
-));
+    settings.host, settings.port), {safe: true}
+);
