@@ -14,6 +14,7 @@ var MongoStore = require('connect-mongo')(session);
 var routesUser = require('./routes/user');
 var routesEdit = require('./routes/edit');
 var routesRemove = require('./routes/remove');
+var routesArchive = require('./routes/archive')
 
 var app = express();
 
@@ -50,6 +51,7 @@ app.use('/', routes);
 app.use('/u', routesUser);
 app.use('/remove', routesRemove);
 app.use('/edit', routesEdit);
+app.use('/archive', routesArchive);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
