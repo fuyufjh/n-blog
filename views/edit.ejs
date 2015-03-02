@@ -1,0 +1,9 @@
+<%- include header %>
+<form method="post">
+    Title: <br />
+    <input type="text" name="title" value="<%= post.title %>" disabled="disabled" /><br />
+    Text: <br />
+    <textarea name="text" rows="20" cols="100"><%= post.text %></textarea><br />
+    <input type="submit" value="Update it" />
+</form>
+<%- include footer %>

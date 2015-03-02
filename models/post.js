@@ -104,3 +104,77 @@ Post.getOne = function(name, day, title, callback) {
     });
   });
 };
+
+Post.getRaw = function(name, day, title, callback) {
+  mongodb.open(function (err, db) {
+    if (err) {
+      return callback(err);
+    }
+    db.collection('posts', function(err, collection) {
+      if (err) {
+        mongodb.close();
+        return callback(err);
+      }
+      var query = {
+        name: name,
+        'time.day': day,
+        title: title
+      };
+      collection.findOne(query, function (err, doc) {
+        mongodb.close();
+        if (err) {
+          return callback(err);
+        }
+        callback(null, doc);
+      });
+    });
+  });
+};
+
+Post.update = function(name, day, title, text, callback) {
+  mongodb.open(function (err, db) {
+    if (err) {
+      return callback(err);
+    }
+    db.collection('posts', function(err, collection) {
+      if (err) {
+        mongodb.close();
+        return callback(err);
+      }
+      var selector = {
+        name: name,
+        'time.day': day,
+        title: title
+      };
+      collection.update(selector, {
+        $set: {text: text}
+      }, function(err) {
+        mongodb.close();
+        callback(err);
+      });
+    });
+  });
+};
+
+Post.remove = function(name, day, title, callback) {
+  mongodb.open(function (err, db) {
+    if (err) {
+      return callback(err);
+    }
+    db.collection('posts', function(err, collection) {
+      if (err) {
+        mongodb.close();
+        return callback(err);
+      }
+      var selector = {
+        name: name,
+        'time.day': day,
+        title: title
+      };
+      collection.remove(selector, {w: 1}, function(err) {
+        mongodb.close();
+        callback(err);
+      });
+    });
+  });
+};

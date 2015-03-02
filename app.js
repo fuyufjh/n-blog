@@ -11,7 +11,9 @@ var multer = require('multer');
 var routes = require('./routes/index');
 var settings = require('./settings');
 var MongoStore = require('connect-mongo')(session);
-var users = require('./routes/users');
+var routesUser = require('./routes/user');
+var routesEdit = require('./routes/edit');
+var routesRemove = require('./routes/remove');
 
 var app = express();
 
@@ -45,7 +47,9 @@ app.use(multer({
 }));
 
 app.use('/', routes);
-app.use('/u', users);
+app.use('/u', routesUser);
+app.use('/remove', routesRemove);
+app.use('/edit', routesEdit);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

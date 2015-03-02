@@ -155,7 +155,7 @@ module.exports = router;
 function checkLogin(req, res, next) {
   if (!req.session.user) {
     req.flash('error', 'Not login!');
-    res.redirect('/login');
+    return res.redirect('/login');
   }
   next();
 }
@@ -163,7 +163,7 @@ function checkLogin(req, res, next) {
 function checkNotLogin(req, res, next) {
   if (req.session.user) {
     req.flash('error', 'Already login!');
-    res.redirect('back');
+    return res.redirect('back');
   }
   next();
 }
