@@ -2,7 +2,7 @@
  * Created by Fu Yu on 2015/3/2.
  */
 
-var mongodb = require('./db');
+var dbPool = require('./db');
 var markdown = require('markdown').markdown;
 
 function Comment(post_id, name, email, website, content) {
@@ -34,18 +34,18 @@ Comment.prototype.save = function(callback) {
     }
   };
 
-  mongodb.open(function(err, db) {
+  dbPool.acquire(function(err, db) {
     if (err) {
       return callback(err);
     }
     db.collection('posts', function(err, collection) {
       if (err) {
-        mongodb.close();
+        dbPool.release(db);
         return callback(err);
       }
       // Insert new comment to this.comments (an array)
       collection.update({_id: post_id}, {$push: {comments: comment}}, function(err) {
-        mongodb.close();
+        dbPool.release(db);
         if (err) {
           callback(null);
         }
@@ -56,17 +56,17 @@ Comment.prototype.save = function(callback) {
 };
 
 Comment.get = function(post_id, callback) {
-  mongodb.open(function (err, db) {
+  dbPool.acquire(function (err, db) {
     if (err) {
       return callback(err);
     }
     db.collection('posts', function(err, collection) {
       if (err) {
-        mongodb.close();
+        dbPool.release(db);
         return callback(err);
       }
       collection.findOne({_id: post_id}, {comments: 1}, function(err, docs) {
-        mongodb.close();
+        dbPool.release(db);
         if (err) {
           return callback(err);
         }

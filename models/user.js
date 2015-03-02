@@ -2,7 +2,7 @@
  * Created by Fu Yu on 2015/3/1.
  */
 
-var mongodb = require('./db');
+var dbPool = require('./db');
 
 function User(user) {
   this.name = user.name;
@@ -19,7 +19,7 @@ User.prototype.save = function (callback) {
     password: this.password,
     email: this.email
   };
-  mongodb.open(function(err, db) {
+  dbPool.acquire(function(err, db) {
     if (err) {
       return callback(err);
     }
@@ -31,7 +31,7 @@ User.prototype.save = function (callback) {
       }
 
       collection.insert(user, {safe: true}, function(err, user) {
-        mongodb.close();
+        dbPool.release(db);
         if (err) {
           return callback(err);
         }
@@ -44,7 +44,7 @@ User.prototype.save = function (callback) {
 
 User.get = function(name, callback) {
   // Read user's information from database.
-  mongodb.open(function (err, db) {
+  dbPool.acquire(function (err, db) {
     if (err) {
       return callback(err);
     }
@@ -56,7 +56,7 @@ User.get = function(name, callback) {
       }
 
       collection.findOne({name: name}, function(err, user) {
-        mongodb.close();
+        dbPool.release(db);
         if (err) {
           return callback(err);
         }

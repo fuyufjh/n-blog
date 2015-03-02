@@ -5,6 +5,27 @@
 var settings = require('../settings'),
     mongodb = require('mongodb');
 
-module.exports = new mongodb.Db(settings.db, new mongodb.Server(
-    settings.host, settings.port), {safe: true}
-);
+var Db = function() {
+  return new mongodb.Db(settings.db, new mongodb.Server(
+          settings.host, settings.port), {safe: true, poolSize: 1}
+  );
+};
+
+var poolModule = require('generic-pool');
+var pool = poolModule.Pool({
+  name     : 'dbPool',
+  create   : function(callback) {
+    var mongodb = Db();
+    mongodb.open(function (err, db) {
+      callback(err, db);
+    })
+  },
+  destroy  : function(mongodb) {
+    mongodb.close();
+  },
+  max      : 100,
+  min      : 2,
+  idleTimeoutMillis : 30000
+});
+
+module.exports = pool;
