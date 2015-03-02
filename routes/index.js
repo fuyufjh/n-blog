@@ -156,6 +156,22 @@ router.post('/upload', function (req, res) {
   res.redirect('/upload');
 });
 
+router.get('/search', function(req, res) {
+  Post.search(req.query.keyword, function(err, posts) {
+    if (err) {
+      req.flash('error', err.message);
+      return res.redirect('/');
+    }
+    res.render('search', {
+      title: 'Post',
+      user: req.session.user,
+      success: req.flash('success').toString(),
+      error: req.flash('error').toString(),
+      posts: posts
+    });
+  });
+});
+
 module.exports = router;
 
 function checkLogin(req, res, next) {

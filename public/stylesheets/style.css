@@ -94,3 +94,11 @@ article a:hover {
     color: #999999;
     margin-right: 1.2em;
 }
+
+.search {
+    border: 0;
+    width: 6em;
+    text-align: center;
+    font-size: 1em;
+    margin: 0.5em 0;
+}
