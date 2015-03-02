@@ -10,5 +10,6 @@
     Date: <%= post.time.minute %>
 </p>
 <p><%- post.text %></p>
+<p class="info">Read: <%= post.pv %> | Comment: <%= post.comments.length %></p>
 <%- include comment %>
 <%- include footer %>

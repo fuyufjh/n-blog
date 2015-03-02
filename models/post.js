@@ -26,6 +26,7 @@ Post.prototype.save = function(callback) {
       date.getHours() + ":" + (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes())
   };
   post.comments = [];
+  post.pv = 0;
 
   mongodb.open(function (err, db) {
     if (err) {
@@ -134,19 +135,24 @@ Post.getOne = function(name, day, title, callback) {
         title: title
       };
       collection.findOne(query, function (err, doc) {
-        mongodb.close();
         if (err) {
+          mongodb.close();
           return callback(err);
         }
-        // Processing with markdown (to HTML)
-        doc.text = markdown.toHTML(doc.text);
-        if (!doc.comments) { // for older version without comments
-          doc.comments = [];
-        }
-        doc.comments.forEach(function (comment) {
-          comment.content = markdown.toHTML(comment.content);
+        collection.update({_id: doc._id}, {
+          $inc: {pv: 1}
+        }, function(err) {
+          mongodb.close();
+          if (err) {
+            return callback(err);
+          }
+          // Processing with markdown (to HTML)
+          doc.text = markdown.toHTML(doc.text);
+          doc.comments.forEach(function (comment) {
+            comment.content = markdown.toHTML(comment.content);
+          });
+          callback(null, doc);
         });
-        callback(null, doc);
       });
     });
   });
