@@ -3,10 +3,12 @@
  */
 
 var dbPool = require('./db');
+var ObjectID = require('mongodb').ObjectID;
 
-function Post(name, title, text) {
+function Post(name, title, text, tags) {
   this.name = name;
   this.title = title;
+  this.tags = tags;
   this.text = text;
 }
 
@@ -15,7 +17,7 @@ module.exports = Post;
 Post.prototype.save = function(callback) {
   var date = new Date();
 
-  var post = new Post(this.name, this.title, this.text);
+  var post = new Post(this.name, this.title, this.text, this.tags);
   post.time = {
     date: date,
     year: date.getFullYear(),
@@ -130,6 +132,10 @@ Post.getOne = function(name, day, title, callback) {
           dbPool.release(db);
           return callback(err);
         }
+        if (!doc) {
+          err = new Error('No such article.');
+          return callback(err);
+        }
         collection.update({_id: doc._id}, {
           $inc: {pv: 1}
         }, function(err) {
@@ -170,7 +176,12 @@ Post.getRaw = function(name, day, title, callback) {
   });
 };
 
-Post.update = function(name, day, title, text, callback) {
+Post.prototype.update = function(post_id, user, callback) {
+  var post = {
+    title: this.title,
+    tags: this.tags,
+    text: this.text
+  };
   dbPool.acquire(function (err, db) {
     if (err) {
       return callback(err);
@@ -180,16 +191,20 @@ Post.update = function(name, day, title, text, callback) {
         dbPool.release(db);
         return callback(err);
       }
-      var selector = {
-        name: name,
-        'time.day': day,
-        title: title
-      };
-      collection.update(selector, {
-        $set: {text: text}
-      }, function(err) {
+      collection.update({
+        _id: new ObjectID(post_id),
+        name: user // for auth (user can only update himself's article)
+      }, {
+        $set: post
+      }, function(err, count) {
         dbPool.release(db);
-        callback(err);
+        if (!err && count === 0) { // count==0 means Auth Failure
+          err = new Error('Nothing updated.');
+        }
+        if (err) {
+          callback(err);
+        }
+        callback(null);
       });
     });
   });
@@ -269,6 +284,56 @@ Post.search = function(keyword, callback) {
           return callback(err);
         }
         callback(null, docs);
+      });
+    });
+  });
+};
+
+Post.getTag = function(tag, callback) {
+  dbPool.acquire(function (err, db) {
+    if (err) {
+      return callback(err);
+    }
+    db.collection('posts', function(err, collection) {
+      if (err) {
+        dbPool.release(db);
+        return callback(err);
+      }
+      collection.find({
+        tags: tag
+      }, {
+        name: 1,
+        time: 1,
+        title: 1
+      }).sort({
+        time: -1
+      }).toArray(function (err, docs) {
+        dbPool.release(db);
+        if (err) {
+          return callback(err);
+        }
+        callback(null, docs);
+      });
+    });
+  });
+};
+
+Post.getAllTags = function(callback) {
+  dbPool.acquire(function (err, db) {
+    if (err) {
+      return callback(err);
+    }
+    db.collection('posts', function(err, collection) {
+      if (err) {
+        dbPool.release(db);
+        return callback(err);
+      }
+      collection.distinct('tags', {}, function(err, tags) {
+        dbPool.release(db);
+        if (err) {
+          return callback(err);
+        }
+        callback(null, tags);
       });
     });
   });

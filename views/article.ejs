@@ -8,6 +8,9 @@
 <p class="info">
     Author: <a href="/u/<%= post.name %>"><%= post.name %></a> |
     Date: <%= post.time.minute %>
+    <% post.tags.forEach(function (tag) { %>
+    <a class="tag" href="/tags/<%= tag %>"><%= tag %></a>
+    <% }) %>
 </p>
 <p><%- post.text %></p>
 <p class="info">Read: <%= post.pv %> | Comment: <%= post.comments.length %></p>
