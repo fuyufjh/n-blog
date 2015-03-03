@@ -3,7 +3,6 @@
  */
 
 var dbPool = require('./db');
-var markdown = require('markdown').markdown;
 
 function Post(name, title, text) {
   this.name = name;
@@ -69,10 +68,6 @@ Post.getAll = function(name, callback) {
         if (err) {
           return callback(err);
         }
-        // Processing with markdown (to HTML)
-        docs.forEach(function(post) {
-          post.text = markdown.toHTML(post.text);
-        });
         callback(null, docs);
       });
     });
@@ -108,10 +103,6 @@ Post.getAllOnePage = function(name, page, callback) {
           if (err) {
             return callback(err);
           }
-          // Processing with markdown (to HTML)
-          docs.forEach(function (post) {
-            post.text = markdown.toHTML(post.text);
-          });
           callback(null, docs, total);
         });
       });
@@ -146,11 +137,6 @@ Post.getOne = function(name, day, title, callback) {
           if (err) {
             return callback(err);
           }
-          // Processing with markdown (to HTML)
-          doc.text = markdown.toHTML(doc.text);
-          doc.comments.forEach(function (comment) {
-            comment.content = markdown.toHTML(comment.content);
-          });
           callback(null, doc);
         });
       });

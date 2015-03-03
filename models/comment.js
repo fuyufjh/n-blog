@@ -3,7 +3,6 @@
  */
 
 var dbPool = require('./db');
-var markdown = require('markdown').markdown;
 
 function Comment(post_id, name, email, website, content) {
   this.post_id = post_id;
@@ -70,9 +69,6 @@ Comment.get = function(post_id, callback) {
         if (err) {
           return callback(err);
         }
-        docs.forEach(function(doc) {
-          doc.content = markdown.toHTML(doc.content);
-        });
         callback(null, docs);
       });
     });

@@ -1,0 +1,111 @@
+@charset "UTF-8";
+
+.simditor-icon {
+  display: inline-block;
+  font: normal normal normal 14px/1 'Simditor';
+  font-size: inherit;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transform: translate(0,0);
+}
+
+.simditor-icon-code:before {
+  content: '\f000';
+}
+
+.simditor-icon-bold:before {
+  content: '\f001';
+}
+
+.simditor-icon-italic:before {
+  content: '\f002';
+}
+
+.simditor-icon-underline:before {
+  content: '\f003';
+}
+
+.simditor-icon-times:before {
+  content: '\f004';
+}
+
+.simditor-icon-strikethrough:before {
+  content: '\f005';
+}
+
+.simditor-icon-list-ol:before {
+  content: '\f006';
+}
+
+.simditor-icon-list-ul:before {
+  content: '\f007';
+}
+
+.simditor-icon-quote-left:before {
+  content: '\f008';
+}
+
+.simditor-icon-table:before {
+  content: '\f009';
+}
+
+.simditor-icon-link:before {
+  content: '\f00a';
+}
+
+.simditor-icon-picture-o:before {
+  content: '\f00b';
+}
+
+.simditor-icon-minus:before {
+  content: '\f00c';
+}
+
+.simditor-icon-indent:before {
+  content: '\f00d';
+}
+
+.simditor-icon-outdent:before {
+  content: '\f00e';
+}
+
+.simditor-icon-chain-broken:before {
+  content: '\f00f';
+}
+
+.simditor-icon-caret-down:before {
+  content: '\f010';
+}
+
+.simditor-icon-caret-right:before {
+  content: '\f011';
+}
+
+.simditor-icon-upload:before {
+  content: '\f012';
+}
+
+.simditor-icon-undo:before {
+  content: '\f013';
+}
+
+.simditor-icon-smile-o:before {
+  content: '\f014';
+}
+
+.simditor-icon-edit-html:before {
+  content: '\f015';
+}
+
+.simditor-icon-tint:before {
+  content: '\f016';
+}
+
+.simditor-icon-font:before {
+  content: '\f017';
+}
+
+.simditor-icon-html5:before {
+  content: '\f018';
+}

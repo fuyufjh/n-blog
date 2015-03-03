@@ -1,9 +1,12 @@
 <%- include header %>
 <form method="post">
     Title: <br />
-    <input type="text" name="title" /><br />
+    <input type="text" name="title" style="width: 100%; height: 20px" /><br />
     Text: <br />
-    <textarea name="text" rows="20" cols="100"></textarea><br />
+    <textarea id="editor" name="text" rows="20"></textarea><br />
     <input type="submit" value="Post it" />
 </form>
+<script language="JavaScript">
+    var editor = new Simditor({ textarea: $('#editor'), defaultImage:'/images/default.png' });
+</script>
 <%- include footer %>

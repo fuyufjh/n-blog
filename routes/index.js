@@ -163,7 +163,7 @@ router.get('/search', function(req, res) {
       return res.redirect('/');
     }
     res.render('search', {
-      title: 'Post',
+      title: 'Search for\''+req.query.keyword+'\'',
       user: req.session.user,
       success: req.flash('success').toString(),
       error: req.flash('error').toString(),
