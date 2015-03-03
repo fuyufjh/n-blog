@@ -1,12 +1,16 @@
 <%- include header %>
-<form method="post">
-    Title: <br />
-    <input type="text" name="title" value="<%= post.title %>" disabled="disabled" /><br />
-    Text: <br />
-    <textarea id="editor" name="text" rows="20"></textarea><br />
-    <input type="submit" value="Update it" />
+<form method="post" action="/edit/<%= post._id %>">
+    Title: <br/>
+    <input type="text" name="title" style="width: 100%" value="<%= post.title %>"/><br/>
+    Tags: (Seprated with comma) <br/>
+    <input type="text" name="tags" style="width: 100%" value="<%= post.tags.join(', ') %>"/><br/>
+    Text: <br/>
+    <textarea id="editor" name="text" rows="20"><%= post.text %></textarea><br/>
+    <input type="hidden" name="date" value="<%= post.time.day %>"/>
+    <input type="hidden" name="name" value="<%= post.name %>"/>
+    <input type="submit" value="Update"/>
 </form>
 <script language="JavaScript">
-    var editor = new Simditor({ textarea: $('#editor'), defaultImage:'/images/default.png' });
+    var editor = new Simditor({textarea: $('#editor'), defaultImage: '/images/default.png'});
 </script>
 <%- include footer %>
