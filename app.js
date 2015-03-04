@@ -16,6 +16,7 @@ var routesEdit = require('./routes/edit');
 var routesRemove = require('./routes/remove');
 var routesArchive = require('./routes/archive');
 var routesTags = require('./routes/tags');
+var routesChat = require('./routes/chat');
 
 var app = express();
 
@@ -56,6 +57,7 @@ app.use('/remove', routesRemove);
 app.use('/edit', routesEdit);
 app.use('/archive', routesArchive);
 app.use('/tags', routesTags);
+app.use('/chat', routesChat);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -1,0 +1,42 @@
+<%- include header %>
+<ul id="messages"></ul>
+<form>
+  <input id="m" autocomplete="off" style="width: 80%" />
+  <input type="submit" value="Send"/>
+</form>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+  var socket = io();
+  var name = "<%= name %>";
+
+  function show(text) {
+    $('#messages').append($('<li>').text(text));
+  }
+
+  // When logged in
+  socket.emit('login', {
+    name: name
+  });
+
+  $('form').submit(function () {
+    socket.emit('send', {
+      content: $('#m').val()
+    });
+    $('#m').val('');
+    return false;
+  });
+
+  socket.on('receive', function (msg) {
+    show(msg.name + ': ' + msg.content);
+  });
+
+  socket.on('welcome', function(msg) {
+    show(msg.name + ' joined!');
+  });
+
+  socket.on('bye', function(msg) {
+    show(msg.name + ' leaved!');
+  });
+
+</script>
+<%- include footer %>
